@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/taskforge_dev
+    username: taskforge
+    password: taskforge_dev_pw
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  # Disabled by default in dev — email is opt-in (see taskforge.email.enabled below).
+  # When enabled, Spring Boot auto-configures a JavaMailSender from these values.
+  mail:
+    host: ${TASKFORGE_SMTP_HOST:}
+    port: ${TASKFORGE_SMTP_PORT:587}
+    username: ${TASKFORGE_SMTP_USERNAME:}
+    password: ${TASKFORGE_SMTP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+
+taskforge:
+  jwt:
+    secret: dev-only-change-me-32-characters-minimum-please
+    access-token-minutes: 1440
+  email:
+    # See docs/07-Email-Setup-Guide.md. Off by default so local dev never
+    # needs SMTP credentials — flip to true (and set TASKFORGE_SMTP_* /
+    # TASKFORGE_EMAIL_FROM) once you want real emails sent.
+    enabled: ${TASKFORGE_EMAIL_ENABLED:false}
+    from: ${TASKFORGE_EMAIL_FROM:noreply@taskforge.local}
+  ai:
+    # Switch with TASKFORGE_AI_PROVIDER=cloud for any non-local deployment.
+    # See docs/05-AI-Provider-Guide.md for free-tier-compatible cloud options.
+    provider: ${TASKFORGE_AI_PROVIDER:ollama}
+    cloud:
+      base-url: ${TASKFORGE_AI_CLOUD_BASE_URL:}
+      api-key: ${TASKFORGE_AI_CLOUD_API_KEY:}
+      model: ${TASKFORGE_AI_CLOUD_MODEL:}
+      provider-label: ${TASKFORGE_AI_CLOUD_PROVIDER_LABEL:cloud provider}
+  ollama:
+    base-url: http://localhost:11434
+    model: llama3.1:8b
+  cors:
+    allowed-origins: http://localhost:5173
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

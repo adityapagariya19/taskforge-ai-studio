@@ -1,0 +1,27 @@
+# Infra services for local development. Run the Spring Boot backend and the
+# Vite frontend directly on your machine (see README) so you get fast
+# reload — only Postgres and Ollama need to be containerized.
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: taskforge_dev
+      POSTGRES_USER: taskforge
+      POSTGRES_PASSWORD: taskforge_dev_pw
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ollama:
+    image: ollama/ollama
+    ports: ["11434:11434"]
+    volumes: ["ollamadata:/root/.ollama"]
+
+volumes:
+  pgdata:
+  ollamadata:
