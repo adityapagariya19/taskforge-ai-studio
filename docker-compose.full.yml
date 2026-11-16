@@ -1,6 +1,4 @@
-# Use this version on a server (e.g. the Oracle Always-Free VM from the
-# Implementation Guide) to run literally everything in containers,
-# including the backend itself. Requires backend/Dockerfile (provided).
+
 version: "3.9"
 services:
   postgres:
